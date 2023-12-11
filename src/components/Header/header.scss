@@ -1,0 +1,160 @@
+.home{
+    height: 80vh;
+    background-image: linear-gradient(rgba(33, 33, 33, 0.5), rgba(33, 33, 33, 0.55)), url('../../Images/katse-dam.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    position: relative;
+
+    .section-container{ 
+        .home-text{
+            text-align: center;
+            
+            .title{
+                color: #F2F2F2;
+                font-size: 2rem;
+                font-weight: 700;
+                line-height: 2.5rem;
+            }
+            .subtitle{
+                color: #F2F2F2;
+                opacity: 0.7;
+                font-size: 13px;
+                font-weight: 300;
+                padding: 1rem 0;
+                max-width: 70%;
+                text-align: center;
+                margin: auto;
+            }
+            .btn{
+                padding: 0.6rem 1.5rem;
+            }
+            
+        }
+        .home-card{
+            width: 80%;
+            border-radius: 1rem;
+            padding: 2rem;
+            background: #F2F2F2;
+            position: absolute;
+            gap: 1rem;
+            justify-content: center;
+            bottom: -40%;
+            transform: translate(-50%);
+            left: 50%;
+            box-shadow: 0 2px 8px 4px rgba(178, 178, 178, 0.5);
+
+            .location-div, .price-div{
+                width: 100%;
+
+                label{
+                    display: block;
+                    font-weight: 500;
+                    font-size: 13px;
+                    padding-bottom: 0.4rem;
+                }
+                input{
+                    width: 100%;
+                    background: #FFFFFF;
+                    border-radius: 0.625rem;
+                    border: none;
+                    padding: 0.625rem;
+                    font-size: 13px;
+                    font-weight: 500;
+                    margin-bottom: 1rem;
+
+                    &::placeholder{
+                        font-size: 13px;
+                        opacity: 0.5;
+                        font-weight: 400;
+                    }
+                    &:focus{
+                        outline: none;
+                    }
+                }
+            }
+            .btn{
+                width: 100%;
+                padding: 0.6rem 1.5rem;
+                font-weight: 600;
+            }
+        }
+        
+    }    
+}
+
+@media screen and (min-width: 480px){
+    .home{
+        .section-container{
+            .home-card{
+                bottom: -100px;
+                width: 90%;
+                grid-template-columns: 2fr 2fr 1fr;
+                .btn{
+                    transform: translateY(5px);
+                }
+            }
+        }
+    }
+}
+
+@media screen and (min-width: 556px) {
+    .home{
+        .section-container{
+            .home-text{
+                .title{
+                    font-size: 2.5rem;
+                }
+                .sub-title{
+                    font-size: 18px;
+                }
+            }
+        }
+    }
+}
+
+@media screen and (min-width: 720px){
+    .home{
+        .section-container{
+            .home-text{
+                padding: 1rem 5rem;
+                .title{
+                    font-size: 3.5rem;
+                    margin: auto;
+                    line-height: 4rem;
+                }
+
+                .sub-title{
+                    width: 70%;
+                }
+            }
+            .home-card{
+                bottom: -10%;
+                grid-template-columns: repeat(3, 1fr);
+                .btn{
+                    transform: translateY(1px);
+                }
+            }
+        }
+    }    
+}
+
+@media screen and (min-width: 1024px){
+    .home{
+        .section-container{
+            .home-text{
+                .sub-title{
+                    font-size: 1.25rem;
+                }
+            }
+
+            .home-card{
+                width: 70%;
+            }
+        }
+    }
+}

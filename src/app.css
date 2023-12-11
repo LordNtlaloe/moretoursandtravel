@@ -1,0 +1,131 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+    transition: 0.3s ease;
+}
+
+a{
+    text-decoration: none;
+}
+
+li{
+    list-style-type: none;
+}
+
+.section{
+    padding: 4rem 0 2rem;
+}
+
+.container{
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+}
+
+.icon{
+    color: #7FBF3F;
+    font-size: 2rem;
+    cursor: pointer;
+}
+
+.logo{
+    width: 5rem;
+}
+
+.flex{
+    display: flex;
+    align-items: center;
+}
+
+.grid{
+    display: grid;
+    align-items: center;
+}
+
+.btn{
+    padding: 0.4rem 1.5rem;
+    border: none;
+    outline: none;
+    border-radius: 3rem;
+    cursor: pointer;
+    background: #7FBF3F;
+    color: #0D0D0D;
+}
+
+.btn a{
+    color: #0D0D0D;
+    font-weight: 500;
+}
+
+.section-intro{
+    max-width: 70%;
+    text-align: center;
+    margin: 0 auto 2rem;
+}
+
+.section-intro .section-title{
+    color: #000D01;
+    line-height: 1.5rem;
+    padding-bottom: 0.5rem;
+}
+
+.section-intro p{
+    font-size: 13px;
+    color: #000D01;
+    font-weight: 500;
+}
+
+img, video{
+    width: 100%;
+    height: auto;
+}
+
+input{
+    font-size: 100%;
+}
+
+@media screen and (min-width: 556px){
+    .main-container, .single-post{
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media screen and (min-width: 884px){
+    .main-container{
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media screen and(min-width: 1240px) {
+    .container{
+        width: 75% !important;
+        margin: auto !important;
+    }
+
+    .section{
+        padding: 5rem 0 3rem;
+    }
+
+    .section-intro{
+        margin: 0 auto 3rem;
+    }
+
+    .section-intro .section-title{
+        line-height: 2rem;
+        padding-bottom: 1rem;
+        font-size: 2.25rem;
+    }
+
+    .section-intro p{
+        font-size: 15px;
+    }
+}
+
+@media screen and (min-width: 2560px){
+    body{
+        zoom: 1.7;
+    }
+}

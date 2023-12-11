@@ -1,0 +1,107 @@
+.offer{
+    .section-container{
+        .main-container{
+            gap: 1rem;
+
+            .single-offer{
+                border-radius: 1rem;
+                overflow: hidden;
+                padding: 0.5rem;
+                box-shadow: 0 2px 8px 4px rgba(178, 178, 178, 0.189);
+
+                .icon{
+                    font-size: 20px;
+                    color: #7FBF3F;
+                }
+                small{
+                    font-weight: 500;
+                    color: #0D0D0D;
+                }
+                .destination-image{
+                    position: relative;
+                    height: 200px;
+                    width: 100%;
+                    border-radius: 1rem;
+                    overflow: hidden;
+
+                    img{
+                        height: 100%;
+                    }
+                    .discount{
+                        position: absolute;
+                        top: 10px;
+                        right: 10px;
+                        padding: 5px 10px;
+                        background: #7FBF3F;
+                        color: #0D0D0D;
+                        border-radius: 2rem;
+                        font-size: 10px;
+                        font-weight: 500;
+                    }
+                }
+                .offer-body{
+                    padding: 1rem;
+
+                    .price{
+                        justify-content: space-between;
+                        
+                        h4{
+                            color: #0D0D0D;
+                            font-weight: 700;
+                            font-size: 1.1rem;
+                        }
+
+                        .status{
+                            padding: 5px 10px;
+                            color: #0D0D0D;
+                            background-color: #7FBF3F;
+                            font-size: 10px;
+                            font-weight: 600;
+                            border-radius: 2rem;
+                        }
+                    }
+
+                    .amenities{
+                        width: 100%;
+                        flex-wrap: wrap;
+                        justify-content: flex-start;
+                        padding: 1rem 0;
+                        gap: 0.5rem;
+
+                        .single-amenity{
+                            padding: 5px 10px;
+                            border-radius: 5px;
+                            background: #F2F2F2;
+                            gap: 0.5rem;
+
+                            .icon{
+                                color: #0D0D0D;
+                            }
+                            small{
+                                color: #0D0D0D;
+                            }
+                        }   
+                    }
+                    .btn{
+                        margin-top: 1rem;
+                        width: 100%;
+                        text-align: center;
+                        justify-content: center;
+                        padding: 0.6rem;
+                        color: #0D0D0D;
+                        font-weight: 600;
+                        gap: 0.5rem;
+
+                        .icon{
+                            color: #0D0D0D;
+                        }
+                    }
+                }
+
+                &:hover{
+                    transform: translateY(-7px);
+                }
+            }
+        }
+    }
+}

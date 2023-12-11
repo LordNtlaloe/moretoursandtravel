@@ -1,0 +1,95 @@
+.footer{
+    background-color: #7FBF3F;
+    padding: 2rem 0;
+
+    .section-container{
+        gap: 1.5rem;
+        text-align: center;
+        .footer-logo{
+            padding-bottom: 0.5rem;
+            
+            .logo{
+                display: flex;
+                margin: auto;
+                flex-direction: row;
+                border-radius: 50%;
+                background: #0D0D0D;
+                cursor: pointer;
+                box-shadow: 0 2px 4px 2px rgba(0, 0, 0, 0.5);
+                align-items: center;
+                justify-content: center;
+                
+                .icon{
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 25px;
+                    color: #0D0D0D;
+                }
+            }
+        }
+        .socials{
+            gap: 0.5rem;
+            margin: auto;
+            justify-content: center;
+            .icon{
+                font-size: 30px;
+                border-radius: 50%;
+                color: #7FBF3F;
+                background-color: #0D0D0D;
+                padding: 0.5rem;
+                &:hover{
+                    background: #F2F2F2;
+                }
+            }
+        }
+
+        .footer-links{
+            display: grid;
+            row-gap: 0.2rem;
+
+            .link-title{
+                padding-bottom: 0.5rem;
+                color: #0D0D0D;
+                font-weight: 700;
+            }
+
+            ul{
+                li{
+                    &:hover{
+                        transform: translateX(10px);
+                    }
+                    a{
+                        color: #0D0D0D;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media screen and (min-width: 448px){
+    .section-container{
+        grid-template-columns: repeat(2, 1fr);
+        text-align: center;
+        align-items: flex-start;
+
+        .footer-links{
+            justify-content: center;
+        }
+    }
+}
+
+@media screen and (min-width: 640px){
+    .section-container{
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media screen and (min-width: 900px){
+    .section-container{
+        padding: 2rem;
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
