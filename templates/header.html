@@ -1,0 +1,117 @@
+{% load static %}
+<div class="container-fluid bg-primary py-5 mb-5 hero-header">
+    <div class="container py-5">
+        <div class="row justify-content-center py-5">
+            <div class="col-lg-10 pt-lg-5 mt-lg-5 text-center">
+                <h1 class="display-3 text-white mb-3 animated slideInDown">Visit The Best Destinations In Lesotho With Us</h1>
+                <p class="fs-4 text-white mb-4 animated slideInDown">More Tours & Travel: Inspired By The World Around Us</p>
+                <form action="{% url 'tours' %}" class="position-relative w-75 mx-auto animated slideInDown">
+                    <input class="form-control border-0 rounded-pill w-100 py-3 ps-4 pe-5" type="text" placeholder="Search For Tours" name=q>
+                    <button type="submit" class="btn btn-primary rounded-pill py-2 px-4 position-absolute top-0 end-0 me-2" style="margin-top: 7px;">Search</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% include 'components/about-section.html' %}
+{% include 'components/services.html' %}
+{% include 'components/destinations.html' %}
+{% include 'components/categories.html' %}
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+            <h6 class="section-title bg-white text-center text-primary px-3">Tours</h6>
+            <h1 class="mb-5">Our Tours</h1>
+        </div>
+        <div class="row g-4 justify-content-center">
+            {% if tours.count > 0 %}
+            {% for tour in tours %}
+                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="package-item">
+                        <div class="overflow-hidden">
+                            <img class="img-fluid" src="{{tour.cover_image.url}}" alt="">
+                        </div>
+                        <div class="d-flex border-bottom">
+                            <small class="flex-fill text-center border-end py-2"><i class="fa fa-map-marker-alt text-primary me-2"></i>{{tour.name}}</small>
+                            <small class="flex-fill text-center border-end py-2"><i class="fa fa-calendar-alt text-primary me-2"></i>{{tour.duration_days}} day(s)</small>
+                            <small class="flex-fill text-center py-2"><i class="fa fa-user text-primary me-2"></i>{{tour.category}}</small>
+                        </div>
+                        <div class="text-center p-4">
+                            <h3 class="mb-0">M{{tour.price}}</h3>
+                            <div class="mb-3">
+                                <small class="fa fa-star text-primary"></small>
+                                <small class="fa fa-star text-primary"></small>
+                                <small class="fa fa-star text-primary"></small>
+                                <small class="fa fa-star text-primary"></small>
+                                <small class="fa fa-star text-primary"></small>
+                            </div>
+                            <p class="text-truncate" data-description="{{ tour.description }}" onmouseover="showFullText(this)">{{ tour.description }}</p>
+                            <div class="d-flex justify-content-center mb-2">
+                                <a href="{% url 'tour' tour.name %}" class="btn btn-sm btn-primary px-3 border-end" style="border-radius: 30px 0 0 30px;">Read More</a>
+                                <button type="button" class="btn btn-sm btn-primary px-3" data-bs-toggle="modal" data-bs-target="#exampleModal" style="border-radius: 0 30px 30px 0;">
+                                    Book Now
+                                </button>  
+                                <div class="modal fade" id="exampleModal" tabindex="1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                      <div class="modal-content">
+                                        <div class="modal-header">
+                                          <h5 class="modal-title" id="bookTourModalTitle">Modal title</h5>
+                                          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                          </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form method="POST">
+                                                {% csrf_token %}
+                                                <!-- Hidden fields for tour details -->
+                                                <input type="hidden" name="tour_id" value="{{ tour.id }}">
+                                                <input type="hidden" name="tour_name" value="{{ tour.name }}">
+                                                
+                                                <div class="mb-3">
+                                                    <label for="tour_date" class="form-label">Date:</label>
+                                                    <input type="date" class="form-control" id="tour_date" name="tour_date" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="num_people" class="form-label">Number of People:</label>
+                                                    <input type="number" class="form-control" id="num_people" name="num_people" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="tour_duration" class="form-label">Tour Duration (days):</label>
+                                                    <input type="number" class="form-control" id="tour_duration" name="tour_duration" required>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                          <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
+                                          <button data-tour="{{tour.id}}" data-action="add" class="btn btn-sm btn-primary px-3 add-btn update-cart">Book Now</button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            {% else %}
+                <p>There Are No Tours To Display Yet</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+<!-- Package End -->
+{% include 'components/bookings.html' %}
+
+
+<script>
+    function showFullText(element) {
+        element.setAttribute('data-full-description', element.textContent);
+        element.textContent = element.getAttribute('data-description');
+    }
+
+    document.querySelectorAll('.text-truncate').forEach(function (element) {
+        element.onmouseout = function (event) {
+            event.target.textContent = event.target.getAttribute('data-full-description');
+        };
+    });
+</script>

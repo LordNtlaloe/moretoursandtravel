@@ -1,0 +1,25 @@
+{% load static %}
+<!-- About Start -->
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="row g-5">
+            <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s" style="min-height: 400px;">
+                <div class="position-relative h-100">
+                    <img class="img-fluid position-absolute w-100 h-100" src="{% static 'assets/img/image-01.jpeg' %}" alt="" style="object-fit: cover;">
+                </div>
+            </div>
+            <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.3s">
+                <h6 class="section-title bg-white text-start text-primary pe-3">About Us</h6>
+                <h1 class="mb-4">Welcome to <span class="text-primary">More Tours & Travel</span></h1>
+                <p class="mb-4">More Tours (Pty) Ltd Trading as More Tours as More Tours and Travel is a private Tour
+                    Operating Company. The company is 100% owned by two Basotho who are very patriotic and have massive
+                    interest in the Tourism Sector, they are very passionate and more interested in promoting
+                    The Kingdom of Lesotho and its Tourist attractions to the rest of the world still playing a
+                    major role in seeing to it that domestic tourism also grows as well as selling the Beauty and
+                    culture of other African Countries.</p>
+                <a class="btn btn-primary py-3 px-5 mt-2" href="{% url 'about-us' %}">Read More</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- About End -->

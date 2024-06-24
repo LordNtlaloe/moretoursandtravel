@@ -1,0 +1,69 @@
+{% extends 'main.html' %}
+{% block content %}
+{% load static %}
+<div class="container-fluid page-header py-5 mb-5 wow fadeIn" data-wow-delay="0.1s">
+    <div class="container py-5 my-5">
+        <h1 class="display-3 text-white mb-3 animated slideInDown">About Us</h1>
+        <nav aria-label="breadcrumb animated slideInDown">
+            <ol class="breadcrumb text-uppercase mb-0">
+                <li class="breadcrumb-item"><a class="text-white" href="#">Home</a></li>
+                <li class="breadcrumb-item"><a class="text-white" href="#">Pages</a></li>
+                <li class="breadcrumb-item text-primary active" aria-current="page">About</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+<!-- Page Header End -->
+
+<!-- About Start -->
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="row g-5">
+            <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
+                <div class="d-flex flex-column">
+                    <img class="img-fluid rounded w-75 align-self-end" src="{% static 'assets/img/WhatsApp Image 2024-04-26 at 23.33.23.jpeg' %}" alt="">
+                    <img class="img-fluid rounded w-50 bg-white pt-3 pe-3" src="{% static 'assets/img/WhatsApp Image 2024-04-26 at 23.33.35 (1).jpeg' %}" alt="" style="margin-top: -25%;">
+                </div>
+            </div>
+            <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
+                <p class="d-inline-block border rounded-pill py-1 px-4">About Us</p>
+                <h1 class="mb-4">Why You Should Trust Us? Get Know About Us!</h1>
+                <p>More Tours (Pty) Ltd Trading as More Tours as More Tours and Travel is a private Tour
+                    Operating Company. The company is 100% owned by two Basotho who are very patriotic and have massive
+                    interest in the Tourism Sector, they are very passionate and more interested in promoting
+                    The Kingdom of Lesotho and its Tourist attractions to the rest of the world still playing a
+                    major role in seeing to it that domestic tourism also grows as well as selling the Beauty and
+                    culture of other African Countries.</p>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <p class="mb-4">More Tours and Travel is Steered by a young Mosotho
+                Woman (Mabohlokoa Pekane) who is the major shareholder in it and has been its Managing
+                Director since its inception in 2014. She basically knows the ins and outs of this business
+                and Tourism Industry in Lesotho and Internationally as she has been the one in the fore front
+                to manage the company financially, administratively, Designing of the Tour packages and
+                costing them, ground handling work, and satisfactorily taking Clients to Most places of
+                Interest in Lesotho, South Africa, Botswana, The Kingdom of Eswatini and many more African
+                Counties as far as Uganda.
+            </p>
+            <p class="mb-4">More Tours and Travel is one of the Best and leading Tour
+                Operating Companies in the Kingdom of Lesotho and has the Best Tour guides in Lesotho
+                who are very friendly, professional and Fluent in English. The Company also host French
+                Speaking Tourists who have satisfactorily been guided by the Top Guides in Lesotho by More
+                Tours and Travel.</p>
+            <div class="row">
+                <p>Our Services are based on 3 major points:</p>
+                <div class="col-6">
+                    <p><i class="far fa-check-circle text-primary me-3"></i>Quality Experience</p>
+                    <p><i class="far fa-check-circle text-primary me-3"></i>Quality Services</p>
+                    <p><i class="far fa-check-circle text-primary me-3"></i>value For Money</p>
+                    <a class="btn btn-primary rounded-pill py-3 px-5 mt-3" href="{% url 'services' %}">Read More</a>
+                </div>
+            </div>
+                
+        </div>
+    </div>
+</div>
+<!-- About End -->
+   
+{% endblock content %}

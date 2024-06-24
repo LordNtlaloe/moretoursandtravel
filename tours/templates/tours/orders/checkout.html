@@ -1,0 +1,161 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<!-- Page Header Start -->
+<div class="container-fluid bg-primary mb-5">
+    <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+        <h1 class="font-weight-semi-bold text-uppercase mb-3 mt-5">Checkout</h1>
+        <div class="d-inline-flex text-white align-items-center justify-content-center">
+            <p class="m-0 text-white"><a href="/" class="text-white">Home</a></p>
+            <p class="m-0 px-2">-</p>
+            <p class="m-0">Checkout</p>
+        </div>
+    </div>
+</div>
+<!-- Page Header End -->
+
+<!-- Checkout Start -->
+<div class="container-fluid pt-5">
+    <form class="row px-xl-5" id="payment-form">
+        {% csrf_token %}
+        <div class="col-lg-8">
+            <div class="mb-4">
+                <h4 class="font-weight-semi-bold mb-4">Billing User Details</h4>
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        <label>First Name</label>
+                        <input class="form-control" type="text" placeholder="First Name" id="first_name" name="first_name" required>
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label>Last Name</label>
+                        <input class="form-control" type="text" placeholder="Last Name" id="last_name" name="last_name" required>
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label>E-mail</label>
+                        <input class="form-control" type="text" placeholder="example@email.com" id="email" name="email" required>
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label>Phone Number</label>
+                        <input class="form-control" type="text" placeholder="+123 456 789" id="phone_number" name="phone_number" required>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card mb-5">
+                <div class="card-header bg-primary">
+                    <h4 class="font-weight-semi-bold m-0">Order Total {{booking.get_cart_items}} Items</h4>
+                </div>
+                <div class="card-body">
+                    <h5 class="font-weight-medium mb-3">Items</h5>
+                    {% for item in items %}
+                    <div class="d-flex justify-content-between">
+                        <p>{{item.tour.name}}</p>
+                        <p>M{{ item.tour.price|floatformat:2 }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="card-footer bg-transparent">
+                    <div class="d-flex justify-content-between mt-2">
+                        <h5 class="font-weight-bold">Total</h5>
+                        <h5 class="font-weight-bold">M{{booking.get_cart_total}}</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-5">
+                <div class="card-header bg-primary">
+                    <h4 class="font-weight-semi-bold m-0">Payment</h4>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <div class="custom-control custom-radio">
+                            <input type="radio" class="custom-control-input" name="payment" id="paypal">
+                            <label class="custom-control-label" for="paypal">Paypal</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="custom-control custom-radio">
+                            <input type="radio" class="custom-control-input" name="payment" id="directcheck">
+                            <label class="custom-control-label" for="directcheck">Direct Check</label>
+                        </div>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" class="custom-control-input" name="payment" id="banktransfer">
+                        <label class="custom-control-label" for="banktransfer">Bank Transfer</label>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent">
+                    <button class="btn btn-lg btn-block btn-primary font-weight-bold my-3 py-3" type="submit">Place Order</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.getElementById("payment-form").addEventListener("submit", function (e) {
+        e.preventDefault();
+        submitFormData();
+    });
+    
+    function submitFormData() {
+        var form = document.getElementById("payment-form");
+        var csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    
+        var userFormData = {
+            first_name: form.first_name.value,
+            last_name: form.last_name.value,
+            email: form.email.value,
+            phone_number: form.phone_number.value,
+            total: document.querySelector('.card-footer h5.font-weight-bold:last-child').innerText.slice(1) // Ensure the total value is correctly formatted
+        };
+    
+        var cartSummary = [];
+        var items = document.querySelectorAll('.card-body .d-flex.justify-content-between');
+        items.forEach(function (item) {
+            cartSummary.push({
+                name: item.children[0].innerText,
+                price: item.children[1].innerText.replace('M', '') // Remove currency symbol
+            });
+        });
+    
+        console.log('User Form Data:', userFormData);
+        console.log('Cart Summary:', items);
+    
+        var url = '/process-payment/';
+    
+        fetch(url, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken
+            },
+            body: JSON.stringify({'form': userFormData, 'cart_summary': items})
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.blob();
+            }
+            throw new Error('Network response was not ok.');
+        })
+        .then(blob => {
+            var url = window.URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = 'invoice.pdf';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            alert('Transaction Completed');
+            document.cookie = 'cart=' + JSON.stringify({}) + ";domain=;path=/";
+            window.location.href = "/";
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while processing your request: ' + error.message);
+        });
+    }
+    
+</script>
+<!-- Checkout End -->
+{% endblock content %}

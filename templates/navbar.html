@@ -1,0 +1,114 @@
+<!-- Navbar -->
+{% load static %}
+
+<div class="container-fluid bg-dark px-5 d-none d-lg-block shadow-sm p-3 border-bottom">
+    <div class="row gx-0">
+        <div class="col-lg-8 text-center text-lg-start mb-2 mb-lg-0">
+            <div class="d-inline-flex align-items-center" style="height: 45px;">
+                <small class="me-3 text-light"><i class="fa fa-map-marker-alt me-2"></i>Thula Tu Complex Office#12, Kingsway, Maseru, Lesotho</small>
+                <small class="me-3 text-light"><i class="fa fa-phone-alt me-2"></i>+266 5850 1548</small>
+                <small class="text-light"><i class="fa fa-envelope-open me-2"></i>moretours3@gmail.com</small>
+            </div>
+        </div>
+        <div class="col-lg-4 text-center text-lg-end">
+            <div class="d-inline-flex align-items-center" style="height: 45px;">
+                <a class="btn btn-sm btn-outline-light btn-sm-square rounded-circle me-2" href=""><i class="fab fa-twitter fw-normal"></i></a>
+                <a class="btn btn-sm btn-outline-light btn-sm-square rounded-circle me-2" href=""><i class="fab fa-facebook-f fw-normal"></i></a>
+                <a class="btn btn-sm btn-outline-light btn-sm-square rounded-circle me-2" href=""><i class="fab fa-linkedin-in fw-normal"></i></a>
+                <a class="btn btn-sm btn-outline-light btn-sm-square rounded-circle me-2" href=""><i class="fab fa-instagram fw-normal"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Topbar End -->
+
+
+<!-- Navbar & Hero Start -->
+<div class="container-fluid position-relative p-0 bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark px-4 px-lg-5 py-3 py-lg-0">
+        <a href="" class="navbar-brand p-0">
+            <img src="{% static 'assets/img/logo.png' %}" alt="Logo">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+            <span class="fa fa-bars"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav ms-auto py-0">
+                <a href="/" class="nav-item nav-link active">Home</a>
+                <a href="{% url 'about-us'%}" class="nav-item nav-link">About</a>
+                <a href="{% url 'services' %}" class="nav-item nav-link">Services</a>
+                <a href="{% url 'tours' %}" class="nav-item nav-link">Tours</a>
+                <div class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">More</a>
+                    <div class="dropdown-menu m-0">
+                        <a href="{% url 'gallery' %}" class="dropdown-item">Gallery</a>
+                        <a href="{% url 'cart' %}" class="dropdown-item">Booking</a>
+                        <a href="team.html" class="dropdown-item">Travel Guides</a>
+                        <a href="testimonial.html" class="dropdown-item">Testimonial</a>
+                        <a href="404.html" class="dropdown-item">404 Page</a>
+                    </div>
+                </div>
+                <a href="contact.html" class="nav-item nav-link">Contact</a>
+                <a href="{% url 'cart' %}" class="nav-item nav-link">
+                    Bookings
+                    <span class="badge roundedbg-dark-pill badge-notification bg-danger">{{bookingItems}}</span>
+                </a>
+            </div>
+            {% if user.is_authenticated %}
+                <a href="{% url 'logout' %}" class="btn btn-primary rounded-pill py-2 px-4">Logout</a>
+            {% else %}
+                <a href="{% url 'register' %}" class="btn btn-primary rounded-pill py-2 px-4">Register</a>
+            {% endif %}
+        </div>
+    </nav>
+</div>
+<!-- Navbar & Hero End -->
+<!-- Navbar End -->
+<!-- <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="fas fa-bars text-white"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <a class="navbar-brand mt-2 mt-lg-0 d-flex align-items-center" href="#">
+                <i class="fa-regular fa-compass text-white display-6 px-2"></i>
+                Seeker
+            </a>
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{% url 'home' %}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{% url 'explore' %}">Explore</a>
+                </li>
+            </ul>
+      </div>
+      <div class="d-flex align-items-center text-white">
+        <a class="me-3 text-white text-decoration-none" href="{% url 'cart' %}">
+            <i class="text-white fas fa-shopping-cart"></i>
+            <span class="badge roundedbg-dark-pill badge-notification bg-danger">{{cartItems}}</span>
+        </a>
+        <div class="dropdown bg-dark">
+            <a class="dropdown-toggle d-flex align-items-center hidden-arrow" href="#" id="navbarDropdownMenuAvatar" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <img src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp" class="rounded-circle" height="25" alt="Black and White Portrait of a Man" loading="lazy" />
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end bg-dark" aria-labelledby="navbarDropdownMenuAvatar">
+                <li>
+                    <a class="dropdown-item" href="{% url 'profile' user.id %}">{{user.username}}</a>
+                </li>
+                
+                {% if user.is_authenticated %}
+                <li>
+                    <a class="dropdown-item text-white" href="{% url 'logout' %}">Logout</a>
+                </li>
+                {% else %}
+                <li>
+                    <a class="dropdown-item text-white" href="{% url 'login' %}">Login</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</div>
+    
+</nav>

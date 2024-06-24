@@ -1,0 +1,25 @@
+{% extends 'main.html' %}
+{% load socialaccount %}
+{% block content %}
+<div class="container py-3 mt-5">
+    <h3>Login</h3>
+    <div class="w-100 d-flex justify-content-center align-items-center">
+        <div class="bg-light rounded p-5" style="width: 600px;">
+            <form method="POST" action="" class="w-100">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="text" name="email" class="form-control" id="email">
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" name="password" class="form-control" id="password">
+                </div>
+                <button class="btn btn-primary w-100" type="submit">Login</button>
+            </form>
+        </div>
+    </div>
+    <p>Or Continue With <a href="{% url 'login'%}?next=/">Google</a></p>
+    <p class="my-4">Don't Have An Account? Register <a href="{% url 'register' %}" class="text-primary text-decoration-none">Here.</a></p>
+</div>
+{% endblock content %}

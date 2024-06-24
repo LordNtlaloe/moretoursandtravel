@@ -1,0 +1,11 @@
+<p>New booking received.</p>
+<p>Customer: {{ booking.user.first_name }} {{ booking.user.last_name }}</p>
+<p>Email: {{ booking.user.email }}</p>
+<p>Booking ID: {{ booking.id }}</p>
+<p>Items:</p>
+<ul>
+  {% for item in items %}
+    <li>{{ item.tour.name }}: M{{ item.tour.price }}</li>
+  {% endfor %}
+</ul>
+<p>Total: M{{ booking.get_cart_total }}</p>
