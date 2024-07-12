@@ -50,7 +50,6 @@ class UserForm(ModelForm):
         fields = [
             'first_name', 
             'last_name',
-            'bio', 
             'email', 
             'address', 
             'phone_number',

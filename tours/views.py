@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Category, Customer, Tour, Review, User, Booking, BookingItem, UserDetails, Destination
+from .models import Category, Customer, Gallery, Activity, Tour, Review, User, Booking, BookingItem, UserDetails, Destination
 from django.db.models import Q
 from .forms import UserForm, UserRegisrationForm, TourForm
 from django.contrib import messages
@@ -13,6 +13,7 @@ from urllib.parse import urlparse
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from io import BytesIO
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # Create your views here.
 
@@ -29,18 +30,24 @@ def home(request):
         Q(description__icontains=q) | 
         Q(category__category_name__icontains=q)
     )
-    category = Category.objects.all().order_by('-created_at')[:4]
+    
+    total_tours_count = tours.count()
+    tours = tours[:6]  # Get only the first 6 tours
+
+    categories = Category.objects.all()
 
     context = {
         'destinations': destinations,
         'tours': tours,
         'booking': booking,
-        'category': category,
+        'categories': categories,
         'items': items,
-        'bookingItems': bookingItems
+        'bookingItems': bookingItems,
+        'total_tours_count': total_tours_count  # Pass the total count to the template
     }
 
     return render(request, 'tours/index.html', context)
+
 
 def getTour(request, name):
     data = cartData(request)
@@ -48,6 +55,10 @@ def getTour(request, name):
     items = data['items']
 
     tour = Tour.objects.get(name=name)
+    gallery = Gallery.objects.filter(tour=tour)
+    activities = Activity.objects.filter(tour=tour)
+    # destination = Destination.objects.filter(tour=tour)
+
     reviews = tour.review_set.all().order_by('-created_at')
 
     if request.method == 'POST':
@@ -57,12 +68,19 @@ def getTour(request, name):
             message=request.POST.get('message')
         )
         return redirect('tour', name=tour.name)
-
+    paginator = Paginator(reviews, 2)  # Show 6 tours per page
+    page = request.GET.get('page')
+    page_number = request.GET.get(page)
+    page_object = paginator.get_page(page_number)
     context = {
+        "page": page_object,
         'tour': tour,
         'reviews': reviews,
         'items': items,
         'bookingItems': bookingItems,
+        'gallery': gallery,
+        'activities': activities,
+        # 'destination': destination
     }
     return render(request, 'tours/tours/tour.html', context)
 
@@ -78,8 +96,15 @@ def tours(request):
         Q(category__category_name__icontains=q)
     )
     categories = Category.objects.all()
-    search_count = tours.count()
+    paginator = Paginator(tours, 6)  # Show 6 tours per page
+    page = request.GET.get('page')
+    page_number = request.GET.get(page)
+    page_object = paginator.get_page(page_number)
+
+    print(tours)   
+    search_count = paginator.count
     context = {
+        'page': page_object,
         'tours' : tours,
         'categories' : categories,
         'search_count' : search_count,
@@ -417,11 +442,39 @@ def process_payment(request):
             return JsonResponse({'error': str(e)}, status=500)
     
     return JsonResponse({'error': 'Invalid request method'}, status=400)
+
 def aboutUs(request):
-    return render(request, 'about.html')
+    data = cartData(request)
+    bookingItems = data['bookingItems']
+    booking = data['booking']
+    items = data['items']
+    context = {
+        'booking': booking,
+        'items': items,
+        'bookingItems': bookingItems,
+    }
+    return render(request, 'about.html', context)
 
 def gallery(request):
-    return render(request, 'gallery.html')
+    data = cartData(request)
+    bookingItems = data['bookingItems']
+    booking = data['booking']
+    items = data['items']
+    context = {
+        'booking': booking,
+        'items': items,
+        'bookingItems': bookingItems,
+    }
+    return render(request, 'gallery.html', context)
 
 def services(request):
-    return render(request, 'services.html')
+    data = cartData(request)
+    bookingItems = data['bookingItems']
+    booking = data['booking']
+    items = data['items']
+    context = {
+        'booking': booking,
+        'items': items,
+        'bookingItems': bookingItems,
+    }
+    return render(request, 'services.html', context)

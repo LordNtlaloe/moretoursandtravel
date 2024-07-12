@@ -5,14 +5,14 @@ from datetime import datetime, date
 class User(AbstractUser):
     first_name = models.CharField(max_length=200, null=True, blank=True)
     last_name = models.CharField(max_length=200, null=True, blank=True)
-    username = models.CharField(unique=True, null=True, max_length=200)
-    bio = models.TextField(max_length=200, null=True, blank=True)
+    # username = models.CharField(unique=True, null=True, max_length=200)
+    # bio = models.TextField(max_length=200, null=True, blank=True)
     email = models.EmailField(unique=True, null=True)
     phone_number = models.CharField(max_length=200, null=True, blank=True)
     address = models.CharField(max_length=255, null=True, blank=True)
     profile_picture = models.ImageField(null=True, default="profile.jpeg")
 
-    # USERNAME_FIELD = 'email'
+    USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
 class Customer(models.Model):
@@ -25,7 +25,7 @@ class Customer(models.Model):
 class Category(models.Model):
     category_name = models.CharField(max_length=200)
     category_description = models.TextField(null=True)
-    category_image = models.CharField(max_length=200, null=True, default="background.jpg")
+    category_image = models.ImageField(null=True, blank=True, default="background.jpg")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -50,6 +50,9 @@ class Tour(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2) 
     cover_image = models.ImageField(null=True, default='background.jpg')   
     duration_days = models.PositiveIntegerField()
+    longitude = models.CharField(null=True, blank=True, default=0, max_length=200)
+    latitude = models.CharField(null=True, blank=True, default=0, max_length=200)
+    district = models.ForeignKey(Destination, on_delete=models.SET_NULL, null=True, blank=True)
     start_date = models.DateField()
     end_date = models.DateField()
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
@@ -129,3 +132,21 @@ class UserDetails(models.Model):
 
     def __str__(self):
         return self.address
+
+class Gallery(models.Model):
+    tour = models.ForeignKey(Tour, on_delete=models.CASCADE)
+    image = models.ImageField()
+    description = models.CharField(max_length=255, null=True, blank=True)
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.tour.name} - {self.description or 'Gallery Image'}"
+
+
+class Activity(models.Model):
+    tour = models.ForeignKey(Tour, on_delete=models.CASCADE, related_name='activities')
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+
+    def __str__(self):
+        return self.name
