@@ -6,60 +6,59 @@ from io import BytesIO
 from . models import * 
 
 def cookieCart(request):
+    # Create empty cart for now for non-logged in user
+    try:
+    	cart = json.loads(request.COOKIES['cart'])
+    except:
+    	cart = {}
+    	print('Cart:', cart)
+        
+    items = []
+    booking = {'get_cart_total': 0, 'get_cart_items': 0, 'shipping': False}
+    bookingItems = booking['get_cart_items']
 
-	#Create empty cart for now for non-logged in user
-	try:
-		cart = json.loads(request.COOKIES['cart'])
-	except:
-		cart = {}
-		print('CART:', cart)
+    for i in cart:
+        if cart[i]['quantity'] > 0:
+                bookingItems += cart[i]['quantity']
+                tour = Tour.objects.get(id=i)
+                total = tour.price * cart[i]['quantity']
 
-	items = []
-	booking = {'get_cart_total':0, 'get_cart_items':0, 'shipping':False}
-	bookingItems = booking['get_cart_items']
+                booking['get_cart_total'] += total
+                booking['get_cart_items'] += cart[i]['quantity']
 
-	for i in cart:
-		#We use try block to prevent items in cart that may have been removed from causing error
-		try:	
-			if(cart[i]['quantity']>0): #items with negative quantity = lot of freebies  
-				bookingItems += cart[i]['quantity']
+                item = {
+                    'id': tour.id,
+                    'tour': {
+                        'id': tour.id,
+                        'name': tour.name,
+                        'price': tour.price,
+                        'imageURL': tour.cover_image
+                    },
+                    'quantity': cart[i]['quantity'],
+                    'get_total': total,
+                }
+                items.append(item)
 
-				tour = Tour.objects.get(id=i)
-				total = (tour.price * cart[i]['quantity'])
 
-				booking['get_cart_total'] += total
-				booking['get_cart_items'] += cart[i]['quantity']
-
-				item = {
-				'id':tour.id,
-				'tour':{'id':tour.id,'name':tour.name, 'price':tour.price, 
-				'imageURL':tour.imageURL}, 'quantity':cart[i]['quantity'],
-				'digital':tour.digital,'get_total':total,
-				}
-				items.append(item)
-
-				if tour.digital == False:
-					booking['shipping'] = True
-		except:
-			pass
-			
-	return {'bookingItems':bookingItems ,'booking':booking, 'items':items}
+    print('Cookie Cart:', {'bookingItems': bookingItems, 'booking': booking, 'items': items})  # Debug statement
+    return {'bookingItems': bookingItems, 'booking': booking, 'items': items}
 
 def cartData(request):
-	if request.user.is_authenticated:
-		customer = request.user
-		booking, created = Booking.objects.get_or_create(customer=customer, completed=False)
-		items = booking.bookingitem_set.all()
-		bookingItems = booking.get_cart_items
-	else:
-		cookieData = cookieCart(request)
-		bookingItems = cookieData['bookingItems']
-		booking = cookieData['booking']
-		items = cookieData['items']
+    if request.user.is_authenticated:
+        customer = request.user
+        booking, created = Booking.objects.get_or_create(customer=customer, completed=False)
+        items = booking.bookingitem_set.all()
+        bookingItems = booking.get_cart_items
+        print('Authenticated Cart Data:', {'bookingItems': bookingItems, 'booking': booking, 'items': items})  # Debug statement
+    else:
+        cookieData = cookieCart(request)
+        bookingItems = cookieData['bookingItems']
+        booking = cookieData['booking']
+        items = cookieData['items']
+        print('Non-Authenticated Cart Data:', {'bookingItems': bookingItems, 'booking': booking, 'items': items})  # Debug statement
 
-	return {'bookingItems':bookingItems ,'booking':booking, 'items':items}
+    return {'bookingItems': bookingItems, 'booking': booking, 'items': items}
 
-	
 def guestOrder(request, data):
 	name = data['form']['name']
 	email = data['form']['email']
@@ -85,15 +84,14 @@ def guestOrder(request, data):
 			booking=booking,
 			quantity=(item['quantity'] if item['quantity']>0 else -1*item['quantity']), # negative quantity = freebies
 		)
-	return customer, booking
+	return customer, bookingItem
 
 def guestBooking(request, data):
-    transaction_id = datetime.datetime.now().timestamp()
-
-    first_name = data['form']['firstName']
-    last_name = data['form']['lastName']
+    # Use the correct keys that match the JavaScript
+    first_name = data['form']['first_name']
+    last_name = data['form']['last_name']
     email = data['form']['email']
-    phone_number = data['form']['phoneNumber']
+    phone_number = data['form']['phone_number']
 
     cookieData = cookieCart(request)
     items = cookieData['items']
@@ -107,7 +105,6 @@ def guestBooking(request, data):
     booking = Booking.objects.create(
         customer=customer,
         completed=False,
-        transaction_id=transaction_id
     )
 
     for item in items:
@@ -119,7 +116,6 @@ def guestBooking(request, data):
                 quantity=item['quantity']
             )
         except Tour.DoesNotExist:
-            # Log error or handle as appropriate
             continue
 
     return customer, booking

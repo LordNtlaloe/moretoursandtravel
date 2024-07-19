@@ -14,6 +14,8 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from io import BytesIO
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.views.decorators.csrf import csrf_exempt
+
 
 # Create your views here.
 
@@ -52,7 +54,9 @@ def home(request):
 def getTour(request, name):
     data = cartData(request)
     bookingItems = data['bookingItems']
+    booking = data['booking']
     items = data['items']
+
 
     tour = Tour.objects.get(name=name)
     gallery = Gallery.objects.filter(tour=tour)
@@ -80,7 +84,7 @@ def getTour(request, name):
         'bookingItems': bookingItems,
         'gallery': gallery,
         'activities': activities,
-        # 'destination': destination
+        'ooking': booking
     }
     return render(request, 'tours/tours/tour.html', context)
 
@@ -280,7 +284,9 @@ def cart(request):
     bookingItems = data['bookingItems']
     booking = data['booking']
     items = data['items']
-    context = {'items' : items, 'booking' : booking, 'bookingItems' : bookingItems}
+    
+    context = {'items': items, 'booking': booking, 'bookingItems': bookingItems}
+    print('Cart Context:', context)  # Debug statement
     return render(request, 'tours/orders/cart.html', context)
 
 def checkout(request):
@@ -288,6 +294,7 @@ def checkout(request):
     bookingItems = data['bookingItems']
     booking = data['booking']
     items = data['items']
+
     context = {'items': items, 'booking': booking, 'bookingItems': bookingItems}
     return render(request, 'tours/orders/checkout.html', context)
 
@@ -386,49 +393,58 @@ def bookingReceipt(request, pk):
     buffer.seek(0)
     return FileResponse(buffer, as_attachment=True, filename='booking_receipt.pdf')
 
-def guestBooking(request, data):
-    form_data = data['form']
-    shipping_data = data['shipping']
+# def guestBooking(request, data):
+#     form_data = data['form']
+#     # shipping_data = data['shipping']
     
-    # Create a new customer
-    customer = Customer.objects.create(
-        first_name=form_data['first_name'],
-        last_name=form_data['last_name'],
-        email=form_data['email'],
-        phone_number=form_data['phone_number'],
-    )
+#     # Create a new customer
+#     customer = Customer.objects.create(
+#         first_name=form_data['first_name'],
+#         last_name=form_data['last_name'],
+#         # email=form_data['email'],
+#         # phone_number=form_data['phone_number'],
+#     )
     
-    # Create a new booking
-    booking = Booking.objects.create(
-        customer=customer,
-        total=form_data['total'],
-        address=shipping_data['address'],
-        city=shipping_data['city'],
-        village=shipping_data['village'],
-        zipcode=shipping_data['zipcode'],
-    )
+#     # Create a new booking
+#     booking = Booking.objects.create(
+#         customer=customer,
+#         total=form_data['total'],
+#         # address=shipping_data['address'],
+#         # city=shipping_data['city'],
+#         # village=shipping_data['village'],
+#         # zipcode=shipping_data['zipcode'],
+#     )
     
-    return customer, booking
+#     return customer, booking
+
 
 def process_payment(request):
     if request.method == 'POST':
         try:
+            # Decode the JSON data
             data = json.loads(request.body)
-            form_data = data['form']
-            cart_summary = data['cart_summary']
+            
+            # Extract form data and cart summary
+            form_data = data.get('form', {})
+            cart_summary = data.get('cart_summary', [])
             
             # Ensure required fields are present
             required_fields = ['first_name', 'last_name', 'email', 'phone_number', 'total']
-            for field in required_fields:
-                if field not in form_data:
-                    return JsonResponse({'error': f'Missing field: {field}'}, status=400)
+            missing_fields = [field for field in required_fields if field not in form_data]
+            if missing_fields:
+                return JsonResponse({'error': f'Missing fields: {", ".join(missing_fields)}'}, status=400)
             
             # Process the booking
             customer, booking = guestBooking(request, data)
+            if not customer or not booking:
+                return JsonResponse({'error': 'Error processing booking'}, status=500)
             
             # Generate the PDF
             pdf_buffer = generate_invoice(booking, cart_summary, form_data)
+            if not pdf_buffer:
+                return JsonResponse({'error': 'Error generating invoice'}, status=500)
             
+            # Create HTTP response with PDF
             response = HttpResponse(pdf_buffer, content_type='application/pdf')
             response['Content-Disposition'] = f'attachment; filename="invoice_{booking.id}.pdf"'
             
@@ -437,6 +453,9 @@ def process_payment(request):
         except json.JSONDecodeError as e:
             print(f"JSON decode error: {e}")
             return JsonResponse({'error': 'Invalid JSON data'}, status=400)
+        except KeyError as e:
+            print(f"Key error: {e}")
+            return JsonResponse({'error': f'Missing key: {str(e)}'}, status=400)
         except Exception as e:
             print(f"General error: {e}")
             return JsonResponse({'error': str(e)}, status=500)

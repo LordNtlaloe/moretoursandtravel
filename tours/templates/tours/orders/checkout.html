@@ -42,15 +42,15 @@
             </div>
         </div>
         <div class="col-lg-4">
-            <div class="card mb-5">
+            <div class="card mb-5" id="cartSummary">
                 <div class="card-header bg-primary">
-                    <h4 class="font-weight-semi-bold m-0">Order Total {{booking.get_cart_items}} Items</h4>
+                    <h4 class="font-weight-semi-bold m-0">Order Total {{ booking.get_cart_items }} Items</h4>
                 </div>
                 <div class="card-body">
                     <h5 class="font-weight-medium mb-3">Items</h5>
                     {% for item in items %}
                     <div class="d-flex justify-content-between">
-                        <p>{{item.tour.name}}</p>
+                        <p>{{ item.tour.name }}</p>
                         <p>M{{ item.tour.price|floatformat:2 }}</p>
                     </div>
                     {% endfor %}
@@ -58,7 +58,7 @@
                 <div class="card-footer bg-transparent">
                     <div class="d-flex justify-content-between mt-2">
                         <h5 class="font-weight-bold">Total</h5>
-                        <h5 class="font-weight-bold">M{{booking.get_cart_total}}</h5>
+                        <h5 class="font-weight-bold">M{{ booking.get_cart_total }}</h5>
                     </div>
                 </div>
             </div>
@@ -107,20 +107,20 @@
             last_name: form.last_name.value,
             email: form.email.value,
             phone_number: form.phone_number.value,
-            total: document.querySelector('.card-footer h5.font-weight-bold:last-child').innerText.slice(1) // Ensure the total value is correctly formatted
+            total: document.querySelector('.card-footer h5.font-weight-bold:last-child').innerText.slice(1).trim() // Ensure the total value is correctly formatted and trimmed
         };
     
         var cartSummary = [];
-        var items = document.querySelectorAll('.card-body .d-flex.justify-content-between');
+        var items = document.querySelectorAll('#cartSummary .d-flex');
         items.forEach(function (item) {
             cartSummary.push({
                 name: item.children[0].innerText,
-                price: item.children[1].innerText.replace('M', '') // Remove currency symbol
+                price: item.children[1].innerText.replace('M', '').trim() // Remove currency symbol and trim whitespace
             });
         });
     
         console.log('User Form Data:', userFormData);
-        console.log('Cart Summary:', items);
+        console.log('Cart Summary:', cartSummary);
     
         var url = '/process-payment/';
     
@@ -130,7 +130,7 @@
                 'Content-Type': 'application/json',
                 'X-CSRFToken': csrftoken
             },
-            body: JSON.stringify({'form': userFormData, 'cart_summary': items})
+            body: JSON.stringify({'form': userFormData, 'cart_summary': cartSummary})
         })
         .then(response => {
             if (response.ok) {

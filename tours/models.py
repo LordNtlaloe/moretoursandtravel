@@ -17,9 +17,12 @@ class User(AbstractUser):
 
 class Customer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
-
+    first_name = models.CharField(max_length=100, default="")
+    last_name = models.CharField(max_length=100, default="")
+    email = models.EmailField(unique=True, default="mail@mail.com", blank=True)  # Ensure this field exists
+    phone_number = models.CharField(max_length=15, default=00000000)
     def __str__(self):
-        return self.user.first_name
+        return self.first_name
 
 # Create your models here.
 class Category(models.Model):
