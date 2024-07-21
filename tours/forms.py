@@ -1,7 +1,7 @@
 from django.forms import ModelForm, Textarea
 from .models import Tour,User
 from django.contrib.auth.forms import UserCreationForm
-
+from django import forms
 
 
 class UserRegisrationForm(UserCreationForm):
@@ -59,3 +59,10 @@ class UserForm(ModelForm):
             super().__init__(*args, **kwargs)
             for myField in self.fields:
                 self.fields[myField].widget.attrs['class'] = 'form-control'
+
+
+class ContactForm(forms.Form):
+    name = forms.CharField(max_length=100)
+    email = forms.EmailField()
+    subject = forms.CharField(max_length=100)
+    message = forms.CharField(widget=forms.Textarea)

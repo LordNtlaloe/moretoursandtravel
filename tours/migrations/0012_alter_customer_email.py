@@ -3,6 +3,12 @@
 from django.db import migrations, models
 
 
+def update_emails(apps, schema_editor):
+    Customer = apps.get_model('tours', 'Customer')
+    for customer in Customer.objects.filter(email=''):
+        customer.email = f'unique_{customer.id}@example.com'
+        customer.save()
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -10,9 +16,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AlterField(
-            model_name='customer',
-            name='email',
-            field=models.EmailField(blank=True, default='mail@mail.com', max_length=254, unique=True),
-        ),
+        migrations.RunPython(update_emails),
     ]

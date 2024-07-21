@@ -21,6 +21,9 @@
         <div class="col-lg-8">
             <div class="mb-4">
                 <h4 class="font-weight-semi-bold mb-4">Billing User Details</h4>
+                {% if user.is_authenticated %}
+                <div id="user-details" data-first-name="{{ user.first_name }}" data-last-name="{{ user.last_name }}" data-email="{{ user.email }}" data-phone-number="{{ user.profile.phone_number }}"></div>
+                {% else %}
                 <div class="row">
                     <div class="col-md-6 form-group">
                         <label>First Name</label>
@@ -39,6 +42,7 @@
                         <input class="form-control" type="text" placeholder="+123 456 789" id="phone_number" name="phone_number" required>
                     </div>
                 </div>
+                {% endif %}
             </div>
         </div>
         <div class="col-lg-4">
@@ -93,22 +97,41 @@
 </div>
 
 <script>
-    document.getElementById("payment-form").addEventListener("submit", function (e) {
-        e.preventDefault();
-        submitFormData();
+    document.addEventListener('DOMContentLoaded', function() {
+        if (document.getElementById('user-details')) {
+            var userDetails = document.getElementById('user-details');
+            var firstName = userDetails.getAttribute('data-first-name');
+            var lastName = userDetails.getAttribute('data-last-name');
+            var email = userDetails.getAttribute('data-email');
+            var phoneNumber = userDetails.getAttribute('data-phone-number');
+            
+            var userFormData = {
+                first_name: firstName,
+                last_name: lastName,
+                email: email,
+                phone_number: phoneNumber,
+                total: document.querySelector('.card-footer h5.font-weight-bold:last-child').innerText.slice(1).trim() // Ensure the total value is correctly formatted and trimmed
+            };
+            
+            submitFormData(userFormData);
+        } else {
+            document.getElementById("payment-form").addEventListener("submit", function (e) {
+                e.preventDefault();
+                var form = document.getElementById("payment-form");
+                var userFormData = {
+                    first_name: form.first_name.value,
+                    last_name: form.last_name.value,
+                    email: form.email.value,
+                    phone_number: form.phone_number.value,
+                    total: document.querySelector('.card-footer h5.font-weight-bold:last-child').innerText.slice(1).trim() // Ensure the total value is correctly formatted and trimmed
+                };
+                submitFormData(userFormData);
+            });
+        }
     });
     
-    function submitFormData() {
-        var form = document.getElementById("payment-form");
+    function submitFormData(userFormData) {
         var csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-    
-        var userFormData = {
-            first_name: form.first_name.value,
-            last_name: form.last_name.value,
-            email: form.email.value,
-            phone_number: form.phone_number.value,
-            total: document.querySelector('.card-footer h5.font-weight-bold:last-child').innerText.slice(1).trim() // Ensure the total value is correctly formatted and trimmed
-        };
     
         var cartSummary = [];
         var items = document.querySelectorAll('#cartSummary .d-flex');

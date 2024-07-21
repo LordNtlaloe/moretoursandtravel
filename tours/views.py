@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
+
+from MoreTours.settings import EMAIL_HOST_USER
 from .models import Category, Customer, Gallery, Activity, Tour, Review, User, Booking, BookingItem, UserDetails, Destination
 from django.db.models import Q
-from .forms import UserForm, UserRegisrationForm, TourForm
+from .forms import UserForm, UserRegisrationForm, TourForm, ContactForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -15,6 +17,8 @@ from reportlab.pdfgen import canvas
 from io import BytesIO
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.decorators.csrf import csrf_exempt
+from django.core.mail import send_mail, EmailMessage
+
 
 
 # Create your views here.
@@ -497,3 +501,42 @@ def services(request):
         'bookingItems': bookingItems,
     }
     return render(request, 'services.html', context)
+
+def contact(request):
+    data = cartData(request)
+    bookingItems = data['bookingItems']
+    booking = data['booking']
+    items = data['items']
+    
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            email = form.cleaned_data['email']
+            subject = form.cleaned_data['subject']
+            message = form.cleaned_data['message']
+                
+            full_message = f"Message From {name} ({email}): \n\n {message}"
+            send_mail(
+                subject,
+                full_message,
+                email,
+                [EMAIL_HOST_USER]
+            )
+            EmailMessage.extra_headers = {
+                'Importance': 'High',
+                'Priority': 'Urgent',
+                'X-Priority': '1',  # 1 (Highest) to 5 (Lowest)
+            }
+            
+            messages.success(request, 'Your Message Has Been Sent Successfully')
+            return redirect('contact')
+    else:
+        form = ContactForm
+    context = {
+        'booking': booking,
+        'items': items,
+        'bookingItems': bookingItems,
+        'form': form
+    }
+    return render(request, 'contact.html', context)

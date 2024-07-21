@@ -48,7 +48,7 @@
                         <a href="404.html" class="dropdown-item">404 Page</a>
                     </div>
                 </div>
-                <a href="contact.html" class="nav-item nav-link">Contact</a>
+                <a href="{% url 'contact' %}" class="nav-item nav-link">Contact</a>
                 <a href="{% url 'cart' %}" class="nav-item nav-link">
                     Bookings
                     <span class="badge roundedbg-dark-pill badge-notification bg-danger">{{bookingItems}}</span>
