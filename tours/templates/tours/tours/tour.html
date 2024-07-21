@@ -149,7 +149,8 @@
                             <i class="fa-solid fa-pencil px-2"></i>Edit
                         </a>
                         <a href="{% url 'delete-tour' tour.id %}" class="text-dark text-decoration-none">
-                            <i class="fa-solid fa-trash text-danger px-2"></i>Delete
+                            <i class="fa-solid fa-trash px-2"></i>
+                            Delete
                         </a>
                     </div>
                 </div>
@@ -157,106 +158,124 @@
             </div>
         </div>
     </div>
-    <div class="tab-pane fade home-container container-fluid" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-        <div class="row p-lg-5 p-md-1 p-sm-1">
-            <div class="description container-fluid bg-white py-2 rounded-3 col-12 border mb-3">
-                <h6 class=""><i class="fa-solid fa-bars text-muted px-2"></i>Description</h6>
-                <p class="px-2">{{tour.description|safe}}</p>
-            </div>
-            <div class="col-lg-6 col-sm-12 py-auto col-md-12">
-                <div class="location container-fluid bg-white p-2 rounded-3 col border">
-                    <h6 class=""><i class="fa-solid fa-location-dot text-muted px-2"></i>Location</h6>
-                    <div id="map" class="map rounded-3"></div>
-                </div>
-                <div class="socials container-fluid bg-white p-2 rounded-3 col border my-3">
-                    <h6 class=""><i class="fa-solid fa-wifi text-muted px-2"></i>Social Media</h6>
-                    <div class="d-flex justify-content-between container p-2">
-                        {% for social in socials %}
-                            <div class="facebook">
-                                <i class="fa-brands fa-{{social.platform_name}}"></i>
-                                <a href="{{social.platform_link}}" class="text-dark text-decoration-none">{{social.platform_name}}</a>
-                            </div>
-                        {% endfor %}
-                    </div>
-                    {% if request.user == tour.user %}
-                        <div class="d-flex m-auto container-fluid">
-                            <a href="{% url 'add-socials' tour.name %}" class="text-dark text-decoration-none">
-                                <i class="fa-solid fa-plus px-2"></i>Add Social Media Accounts
-                            </a>
-                        </div>
-                    {% endif %}
-                </div>
-                <div class="region container-fluid bg-white my-3 p-2 rounded-3 col border">
-                    <h6 class=""><i class="fa-solid fa-location-dot text-muted px-2"></i>Region</h6>
-                    <p class="p-2">{{tour.district}}</p>
-                </div>
-            </div>
-            <div class="col-lg-6 col-sm-12 py-auto col-md-12">
-                <div class="description container-fluid bg-white rounded-3 border">
-                    <div class="accordion border-0" id="accordionExample">
-                        <div class="accordion-item border-0">
-                            <h2 class="accordion-header border-0" id="headingTwo">
-                                <button class="accordion-button collapsed border-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                    <h6 class=""><i class="fa-solid fa-clock text-muted px-2"></i>Activities</h6>
-                                </button>
-                            </h2>
-                            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-                                <div class="accordion-body">
-                                    
-                                    <ul class="list-group list-group-flush">
-                                        {% for actvitiy in activities %}
-                                            <li class="list-group-item text-dark">{{actvitiy.name}}</li>
-                                        {% endfor %}
-                                      </ul>
-                                </div>
+    <div class="tab-pane fade home-container-fluid container-fluid" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+        <h3 class="mt-2 text-center home-container-fluid">Gallery</h3>
+        {% if products.count > 0 %}
+            <div class="row container-fluid home-container-fluid">
+                {% for product in products %}
+                <div class="col-sm-6 col-md-4">
+                    <div class="card products">
+                        <img src="{{product.product_image.url}}" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">{{product.product_name}}</h5>
+                            <p class="card-text text-truncate">{{product.product_description}}</p>
+                                <div class="d-flex justify-content-between">
+                                <p>M{{product.product_price|floatformat:2}}</p>
+                                <button data-product="{{product.id}}" data-action="add" class="btn btn-primary add-btn update-cart">Add To Cart</button>
                             </div>
                         </div>
+                        {% if request.user == tour.user %}
+                            <div class="d-flex m-auto">
+                                <a href="{% url 'add-product' tour.business_name %}" class="text-dark text-decoration-none">
+                                    <i class="fa-solid fa-plus px-2"></i>Add New Product
+                                </a>
+                                <a href="{% url 'edit-product' tour.business_name product.id %}" class="text-dark text-decoration-none">
+                                    <i class="fa-solid fa-pencil px-2"></i>Edit
+                                </a>
+                                <a href="{% url 'delete-product' tour.business_name product.id %}" class="text-dark text-decoration-none">
+                                    <i class="fa-solid fa-trash px-2"></i>
+                                    Delete
+                                </a>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
-                <div class="region container-fluid bg-white my-3 p-2 rounded-3 col border">
-                    <h6 class=""><i class="fa-solid fa-image text-muted px-2"></i>Gallery</h6>
-                    <section class="">
-                        <!-- Section: Images -->
-                        <section class="">
-                            <div class="row">
-                                {% for item in gallery %}
-                                <div class="col-lg-4 col-md-12 mb-4 mb-lg-0">
-                                    <div class="bg-image hover-overlay ripple shadow-1-strong p-2 rounded-3" data-ripple-color="light">
-                                        <img src="{{item.image.url}}" class="w-100 rounded-3"/>
-                                        <a href="#!" data-mdb-toggle="modal" data-mdb-target="#exampleModal1">
-                                            <div class="mask" style="background-color: rgba(251, 251, 251, 0.2);"></div>
-                                        </a>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>There Are No Products yet</p>
+        {% endif %}
+    </div>
+    <div class="tab-pane fade container-fluid home-container-fluid" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
+        <div class="container-fluid-xxl py-5">
+            <div class="container">
+                <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+                    <h6 class="section-title bg-white text-primary px-3">Leave A Review</h6>
+                    <h3 class="mb-5">Tell Us What You Think About This Tour</h3>
+                </div>
+                <div class="row g-5">
+                    <div class="col-lg-6 wow">
+                        <div class="row g-4">
+                            <div class="col-12 py-4">
+                                {% if reviews.count > 0 %}
+                                <h3 class="mb-4 font-weight-bold">{{ reviews.count }} Review (s)</h3>
+                                {% for review in reviews %}
+                                <div class="media mb-4">
+                                    {% if review.user.profile_picture %}
+                                        <img src="{{ review.user.profile_picture.url }}" alt="Profile Picture" class="mr-3 mt-1 rounded-circle" style="width:60px;">
+                                    {% else %}
+                                        <img src="{% static 'assets/images/profile.jpeg' %}" alt="Profile Picture" class="mr-3 mt-1 rounded-circle" style="width:60px;">
+                                    {% endif %}
+                                    <div class="media-body">
+                                        <h6>{{ review.user }} <small><i>{{ review.created_at|timesince }} ago</i></small></h6>
+                                        <p>"{{ review.message }}"</p>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <button class="btn btn-sm btn-light">Reply</button>
+                                        {% if request.user == review.user %}
+                                            <a href="{% url 'delete-review' review.id %}" class="btn btn-sm btn-light">Delete</a>
+                                        {% endif %}
                                     </div>
                                 </div>
-                                {% endfor%}
+                                {% endfor %}
+                                <div class="pagination text-center">
+                                    <span class="step-links text-center">
+                                        {% if page.has_previous %}
+                                            <a href="?page=1">&laquo; first</a>
+                                            <a href="?page={{ page.previous_page_number }}">previous</a>
+                                        {% endif %}
+                            
+                                        <span class="current text-center">
+                                            Page {{ page.number }} of {{ page.paginator.num_pages }}.
+                                        </span>
+                            
+                                        {% if tours.has_next %}
+                                            <a href="?page={{ page.next_page_number }}">next</a>
+                                            <a href="?page={{ page.paginator.num_pages }}">last &raquo;</a>
+                                        {% endif %}
+                                    </span>
+                                </div>
+                                {% else %}
+                                    <p>There Are No Reviews Yet</p>
+                                {% endif %}
                             </div>
-                        </section>
-                    </section>
-                </div>
-                <div class="region container-fluid bg-white my-3 p-2 rounded-3 col border">
-                    <h6 class=""><i class="fa-solid fa-list text-muted px-2"></i>Category</h6>
-                    <div class="d-flex p-2 align-items-center">
-                        <p class="text-white bg-danger px-2 py-2 rounded-circle h5">{{tour.category.category_icon|safe}}</p>
-                        <p class="px-2">{{tour.category.category_name}}</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 wow" data-wow-delay="0.5s">
+                        {% if request.user.is_authenticated %}
+                        <div class="row g-3">
+                            <form method="POST" action="">
+                                {% csrf_token %}
+                                <div class="col-12 mb-2">
+                                    <textarea class="form-control" rows="5" name="message" id="message" placeholder="Message"></textarea>
+                                </div>
+                                <div class="col-12">
+                                    <button class="btn btn-primary w-100 py-3" type="submit">Leave A Comment</button>
+                                </div>
+                            </form>
+                        </div>
+                        {% else %}
+                            <h6><a href="{% url 'login' %}">Login To Leave A Comment</a></h6>
+                        {% endif %}
                     </div>
                 </div>
-                {% if request.user.is_superuser == 1 %}
-                <div class="region container-fluid bg-white my-3 p-2 rounded-3 border">
-                    <h6 class=""><i class="fa-solid fa-building text-muted px-2"></i>Manage Tour Content</h6>
-                    <div class="d-flex m-auto">
-                        <a href="{% url 'edit-tour' tour.name %}" class="text-dark text-decoration-none">
-                            <i class="fa-solid fa-pencil px-2"></i>Edit
-                        </a>
-                        <a href="{% url 'delete-tour' tour.id %}" class="text-dark text-decoration-none">
-                            <i class="fa-solid fa-trash text-danger px-2"></i>Delete
-                        </a>
-                    </div>
-                </div>
-                {% endif %}
             </div>
         </div>
     </div>
+    
 </div>
+
+
 
 
 

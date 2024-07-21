@@ -66,3 +66,8 @@ class ContactForm(forms.Form):
     email = forms.EmailField()
     subject = forms.CharField(max_length=100)
     message = forms.CharField(widget=forms.Textarea)
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for myField in self.fields:
+            self.fields[myField].widget.attrs['class'] = 'form-control col-12 col-sm-6 rounded-3 m-0'

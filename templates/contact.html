@@ -14,7 +14,7 @@
             <h1 class="mb-5">Contact For Any Query</h1>
         </div>
         <div class="row g-4">
-            <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+            <div class="col-lg-6 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
                 <h5>Get In Touch</h5>
                 <p class="mb-4">Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit. Aliqu diam amet diam et eos</p>
                 <div class="d-flex align-items-center mb-4">
@@ -35,7 +35,7 @@
                         <p class="mb-0">+266 5850 1548</p>
                     </div>
                 </div>
-                <div class="d-flex align-items-center">
+                <div class="d-flex align-items-center mb-4">
                     <div class="d-flex align-items-center justify-content-center flex-shrink-0 bg-primary" style="width: 50px; height: 50px;">
                         <i class="fa fa-envelope-open text-white"></i>
                     </div>
@@ -44,14 +44,16 @@
                         <p class="mb-0">moretours3@gmail.com</p>
                     </div>
                 </div>
+                <div class="align-items-center mb-4 wow fadeInUp" data-wow-delay="0.3s">
+                    <div id="map" class="map rounded-3"></div>
+                </div>
             </div>
-            <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
-                <div id="map" class="map rounded-3 mx-3"></div>
-            </div>
-            <div class="col-lg-4 col-md-12 wow fadeInUp" data-wow-delay="0.5s">
+            <div class="col-lg-6 col-md-12 wow fadeInUp mt-1" data-wow-delay="0.5s">
                 <form method="post">
-                    {% csrf_token %}
-                    {{ form.as_p }}
+                    <div class="row">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                    </div>
                     <div class="col-12">
                         <button class="btn btn-primary w-100 py-3" type="submit">Send Message</button>
                     </div>
